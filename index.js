@@ -4,11 +4,11 @@ const mongoose = require("mongoose")
 const app = express();
 const nodemailer = require('nodemailer');
 
-const PORT = 5000;
-app.use(cors())
+const PORT =5000;
+app.use(cors());
 app.use(express.json())
 
-mongoose.connect("mongodb+srv://arun:arun123@cluster0.zgcjldn.mongodb.net/form?retryWrites=true&w=majority&appName=Cluster0").then(()=>{console.log("mongodb connect")})
+mongoose.connect("mongodb+srv://arun:arun123@cluster0.zgcjldn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").then(()=>{console.log("mongodb connect")})
 .catch(()=>{console.log("db connect fail")})
 
 const Contact = mongoose.model("Contact",{name:String,email:String,message:String},"contact")
