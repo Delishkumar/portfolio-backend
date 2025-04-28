@@ -8,7 +8,7 @@ const PORT =5000;
 app.use(cors());
 app.use(express.json())
 
-mongoose.connect("mongodb+srv://arun:arun123@cluster0.zgcjldn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").then(()=>{console.log("mongodb connect")})
+mongoose.connect("mongodb+srv://arun:arun123@cluster0.zgcjldn.mongodb.net/form?retryWrites=true&w=majority&appName=Cluster0").then(()=>{console.log("mongodb connect")})
 .catch(()=>{console.log("db connect fail")})
 
 const Contact = mongoose.model("Contact",{name:String,email:String,message:String},"contact")
@@ -25,13 +25,14 @@ const transporter = nodemailer.createTransport({
 app.post('/api/user', async (req, res) => {
 
   try{
+   
   const user = new Contact({name:req.body.name,
     email:req.body.email,message:req.body.message
   })
- await user.save().then(()=>{console.log("saved")}).catch(()=>{console.log("save fail")})
+  await user.save().then(()=>{console.log("saved")}).catch(()=>{console.log("save fail")})
   const mailOptions = {
     from: 'delishkumar800@gmail.com',
-    to: 'delishkumar39@gmail.com', // or any recipient
+    to: 'delishkumar39@gmail.com', 
     subject: 'New Contact Form Submission',
     text: `
       Name: ${req.body.name}
@@ -40,7 +41,10 @@ app.post('/api/user', async (req, res) => {
     `
   };
 
-await transporter.sendMail(mailOptions);}
+await transporter.sendMail(mailOptions);
+res.send("sucessfull")
+}
+
 catch(error){
   console.log("email send fail")
 }
