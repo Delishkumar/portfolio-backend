@@ -17,42 +17,39 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'delishkumar800@gmail.com',         
-    pass: 'uamj nmry repl qdnn'             
+    pass: 'resh bvad hpbe yrps'             
   }
 });
 
 
 app.post('/api/user', async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
 
-  try{
-   
-  const user = new Contact({name:req.body.name,
-    email:req.body.email,message:req.body.message
-  })
-  await user.save().then(()=>{console.log("saved")}).catch(()=>{console.log("save fail")})
-  const mailOptions = {
-    from: 'delishkumar800@gmail.com',
-    to: 'delishkumar39@gmail.com', 
-    subject: 'New Contact Form Submission',
-    text: `
-      Name: ${req.body.name}
-      Email: ${req.body.email}
-      Message: ${req.body.message}
-    `
-  };
+    const user = new Contact({ name, email, message });
 
-await transporter.sendMail(mailOptions);
-res.send("sucessfull")
-}
+    await user.save()
+      .then(() => console.log("User saved to DB"))
+      .catch((err) => {
+        console.error("Save failed:", err);
+        return res.status(500).send("Database save failed");
+      });
 
-catch(error){
-  console.log("email send fail")
-}
+    const mailOptions = {
+      from: 'delishkumar800@gmail.com',
+      to: 'delishkumar39@gmail.com',
+      subject: 'New Contact Form Submission',
+      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+    };
 
+    await transporter.sendMail(mailOptions);
 
-
+    res.status(200).send("Successful");
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).send("Email send failed");
+  }
 });
-
 
 
 // Error Handling Middleware
